@@ -5,57 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YouTube Prompt Generator</title>
     <style>
-      body {
-        margin: 2rem;
+    body {
+        background-image: url('{{ url_for("static", filename="images/robots.jpg") }}');
+        background-size: 100% auto;    
+        background-repeat: no-repeat;
+        background-clip: text;
+        color: aqua;    
+        text-align: center;
+        font-weight: bold;
+    }
+    .container{
+        margin: 0rem 5rem;
       }
-      .prompt-response {
+    .prompt-response {
         margin-bottom: 2rem;
       }
-      .prompt {
+    .prompt {
         font-weight: bold;
       }
-      .response {
+    .response {
         margin-left: 2rem;
       }
-      #loading{
-        display:none;
+    .prompt-box{
+        border: 1px solid red;
+
+    }
+    .response-box{
+
+    }
+    #loading {
+        display: none;
         font-weight: bold;
       }
     </style>
 
     <script>
-        function showLoading() {
-            document.getelementById('loading').style.dispaly = 'block';
-        }
+      function showLoading() {
+        document.getelementById("loading").style.display = "block";
+      }
     </script>
   </head>
 
   <body>
+    <div class="container">
     <h1>YouTube Prompt Generator</h1>
-    <form method="POST" onSubmit"showLoading()">
+    <form method="POST" onSubmit="showLoading()">
       <label for="video_url">YouTube Video URL:</label>
       <input type="text" id="video_url" name="video_url" required />
       <button type="submit">Generate Prompts</button>
     </form>
 
-    {% if prompts %}
+    {% if video_title %}
+    <h2>{{video_title}}</h2>
+    {% endif %} {% if prompts %}
     <h2>generated prompts:</h2>
+    <div class='prompt-box'>
     <ul>
       {% for prompt in prompts %}
       <li>{{ prompt }}</li>
       {% endfor %}
     </ul>
-    {% endif %} 
-    
-    <div id="loading">generating... please hold</div>
-    
+    </div>
+    {% endif %}
+
+    <div id="loading">generating... #e hold</div>
+
     {% if responses %}
     <h2>responses:</h2>
+    <div class='response-box'>
     <ul>
       {% for response in responses %}
       <li>{{ response }}</li>
       {% endfor %}
     </ul>
+    </div>
     {% endif %}
+    <div>
   </body>
+
 </html>

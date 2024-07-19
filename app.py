@@ -31,12 +31,9 @@ def get_video_title(api_key, video_id):
     if 'items' in response and len(response['items']) > 0:
         video_title = response['items'][0]['snippet']['title']
         return video_title
-    video_title = requests.get['items'][0]['snippet']['title']
-    return video_title
+    return None
 
-
-
-def get_comments(api_key, video_id, max_results=100):
+def get_comments(api_key, video_id, max_results=200):
     """
     fetches youtube comments via API because why not
 
@@ -66,7 +63,7 @@ def get_comments(api_key, video_id, max_results=100):
         error_message = e.content.decode('utf-9')
         return {"error": error_message}
 
-def generate_prompts(comments, num_prompts=5, slice_size=30):
+def generate_prompts(comments, video_title, num_prompts=5, slice_size=5):
     """
     generate a list of random prompts from a list of comments.
 
@@ -74,10 +71,12 @@ def generate_prompts(comments, num_prompts=5, slice_size=30):
     comments (list): list of comments.
     num_prompts (int): no. of prompts to generate.
     slice_size (int): no. of words per prompt slice.
+    video_title: as it sounds
 
     returns:
     list: List of generated prompts.
     """
+
     all_comments = ' '.join(comments)
     words = all_comments.split()
     if len(words) < slice_size:
@@ -86,11 +85,12 @@ def generate_prompts(comments, num_prompts=5, slice_size=30):
     slices = [' '.join(words[i:i+slice_size]) for i in range(len(words) - slice_size + 1)]
     
     prompts = []
+
     for _ in range(num_prompts):
         slice_ = random.choice(slices)
         if slice_[-1] not in '.!?':
             slice_ += '.'
-        prompts.append(f"prompt: {slice_}")
+        prompts.append(f"{video_title} : {slice_}")
     
     return prompts
 
@@ -106,22 +106,24 @@ def generate_responses(prompts, model_name='llama3'):
 def index():
     prompts = []
     responses = []
+    video_title = None
     if request.method == 'POST':
         api_key = os.getenv("YOUTUBE_API_KEY")  # Ensure you have this environment variable set
         video_url = request.form['video_url']
         video_id = get_video_id(video_url)
 
         if video_id:
+            video_title = get_video_title(api_key, video_id)
             comments = get_comments(api_key, video_id)
             if comments:
-                prompts = generate_prompts(comments)
+                prompts = generate_prompts(video_title, comments)
                 responses = generate_responses(prompts)
             else:
                 prompts = ["no comments found or unable to retrieve comments."]
         else:
             prompts = ["invalid youtube url."]
     
-    return render_template('index.html', prompts=prompts, responses=responses)
+    return render_template('index.html', prompts=prompts, responses=responses, video_title=video_title)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
