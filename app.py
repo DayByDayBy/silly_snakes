@@ -87,6 +87,7 @@ def generate_responses(prompts, model_name='llama3'):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     prompts = []
+    responses = []
     if request.method == 'POST':
         api_key = os.getenv("YOUTUBE_API_KEY")  # Ensure you have this environment variable set
         video_url = request.form['video_url']
@@ -96,6 +97,7 @@ def index():
             comments = get_comments(api_key, video_id)
             if comments:
                 prompts = generate_prompts(comments)
+                responses = generate_prompts(prompts)
             else:
                 prompts = ["no comments found or unable to retrieve comments."]
         else:
