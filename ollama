@@ -1,7 +1,0 @@
-model_name = 'llama3'
-responses = []
-
-for p in prompts:
-    response = ollama.generate(model = model_name, prompt=p)
-    responses.append(response['response'])
-

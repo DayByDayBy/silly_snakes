@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Prompt Generator</title>
+    <style> 
+        body{
+            margin: 2rem;
+        }
+        .prompt-response{
+            margin-bottom: 2rem;
+        }
+        .prompt{
+            font-weight: bold;
+        }
+        .response{
+            margin-left: 2rem;
+        }
+    </style>
 </head>
+
 <body>
     <h1>YouTube Prompt Generator</h1>
     <form method="POST">
@@ -12,13 +27,26 @@
         <input type="text" id="video_url" name="video_url" required>
         <button type="submit">Generate Prompts</button>
     </form>
+
     {% if prompts %}
-        <h2>Generated Prompts:</h2>
+        <h2>generated prompts:</h2>
         <ul>
         {% for prompt in prompts %}
             <li>{{ prompt }}</li>
         {% endfor %}
         </ul>
     {% endif %}
+
+    {% if responses %}
+        <h2>responses:</h2>
+        <ul>
+        {% for response in responses %}
+            <li>{{ response }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+
+
 </body>
 </html>
