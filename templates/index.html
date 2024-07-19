@@ -1,52 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YouTube Prompt Generator</title>
-    <style> 
-        body{
-            margin: 2rem;
-        }
-        .prompt-response{
-            margin-bottom: 2rem;
-        }
-        .prompt{
-            font-weight: bold;
-        }
-        .response{
-            margin-left: 2rem;
-        }
+    <style>
+      body {
+        margin: 2rem;
+      }
+      .prompt-response {
+        margin-bottom: 2rem;
+      }
+      .prompt {
+        font-weight: bold;
+      }
+      .response {
+        margin-left: 2rem;
+      }
+      #loading{
+        display:none;
+        font-weight: bold;
+      }
     </style>
-</head>
 
-<body>
+    <script>
+        function showLoading() {
+            document.getelementById('loading').style.dispaly = 'block';
+        }
+    </script>
+  </head>
+
+  <body>
     <h1>YouTube Prompt Generator</h1>
-    <form method="POST">
-        <label for="video_url">YouTube Video URL:</label>
-        <input type="text" id="video_url" name="video_url" required>
-        <button type="submit">Generate Prompts</button>
+    <form method="POST" onSubmit"showLoading()">
+      <label for="video_url">YouTube Video URL:</label>
+      <input type="text" id="video_url" name="video_url" required />
+      <button type="submit">Generate Prompts</button>
     </form>
 
     {% if prompts %}
-        <h2>generated prompts:</h2>
-        <ul>
-        {% for prompt in prompts %}
-            <li>{{ prompt }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
+    <h2>generated prompts:</h2>
+    <ul>
+      {% for prompt in prompts %}
+      <li>{{ prompt }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} 
+    
+    <div id="loading">generating... please hold</div>
+    
     {% if responses %}
-        <h2>responses:</h2>
-        <ul>
-        {% for response in responses %}
-            <li>{{ response }}</li>
-        {% endfor %}
-        </ul>
+    <h2>responses:</h2>
+    <ul>
+      {% for response in responses %}
+      <li>{{ response }}</li>
+      {% endfor %}
+    </ul>
     {% endif %}
-
-
-
-</body>
+  </body>
 </html>

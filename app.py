@@ -1,12 +1,11 @@
 import os
 import random
+import requests
 import ollama
 from flask import Flask, request, render_template
 from googleapiclient.discovery import build
 import re
 from dotenv import load_dotenv
-
-
 
 app = Flask(__name__)
 
@@ -25,9 +24,21 @@ def get_video_id(url):
     match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11}).*', url)
     return match.group(1) if match else None
 
+def get_video_title(api_key, video_id):
+    youtube = build("youtube", "v3", developerKey=api_key)
+    request = youtube.videos().list(part="snippet", id= video_id)
+    response = request.execute()
+    if 'items' in response and len(response['items']) > 0:
+        video_title = response['items'][0]['snippet']['title']
+        return video_title
+    video_title = requests.get['items'][0]['snippet']['title']
+    return video_title
+
+
+
 def get_comments(api_key, video_id, max_results=100):
     """
-    fetches comments using the YouTube Data API.
+    fetches youtube comments via API because why not
 
     parameters:
     api_key (str): The API key for authenticating with the YouTube Data API.
@@ -38,15 +49,22 @@ def get_comments(api_key, video_id, max_results=100):
     list: list of comments.
     """
     youtube = build("youtube", "v3", developerKey=api_key)
-    request = youtube.commentThreads().list(
-        part="snippet",
-        videoId=video_id,
-        maxResults=max_results
-    )
-    response = request.execute()
+    
+    try:
+        request = youtube.commentThreads().list(
+            part="snippet",
+            videoId=video_id,
+            maxResults=max_results
+        )
+        response = request.execute()
+        
 
-    comments = [item['snippet']['topLevelComment']['snippet']['textOriginal'] for item in response['items']]
-    return comments
+        comments = [item['snippet']['topLevelComment']['snippet']['textOriginal'] for item in response['items']]        
+        return comments
+    
+    except request.HttpError as e:
+        error_message = e.content.decode('utf-9')
+        return {"error": error_message}
 
 def generate_prompts(comments, num_prompts=5, slice_size=30):
     """
@@ -97,13 +115,13 @@ def index():
             comments = get_comments(api_key, video_id)
             if comments:
                 prompts = generate_prompts(comments)
-                responses = generate_prompts(prompts)
+                responses = generate_responses(prompts)
             else:
                 prompts = ["no comments found or unable to retrieve comments."]
         else:
             prompts = ["invalid youtube url."]
     
-    return render_template('index.html', prompts=prompts)
+    return render_template('index.html', prompts=prompts, responses=responses)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

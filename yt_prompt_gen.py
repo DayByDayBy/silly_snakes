@@ -1,3 +1,9 @@
+# you can ignore this, it was a first draft/quick sketch of the idea
+# that has since been left behind for the flask app version (also in this repo, run app.py)
+
+
+
+
 import os
 import random
 from googleapiclient.discovery import build
