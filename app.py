@@ -6,6 +6,8 @@ from flask import Flask, request, render_template
 from googleapiclient.discovery import build
 import re
 from dotenv import load_dotenv
+# from flask_caching import Cache
+
 
 app = Flask(__name__)
 
@@ -60,10 +62,10 @@ def get_comments(api_key, video_id, max_results=200):
         return comments
     
     except request.HttpError as e:
-        error_message = e.content.decode('utf-9')
+        error_message = e.content.decode('utf-8')
         return {"error": error_message}
 
-def generate_prompts(comments, video_title, num_prompts=5, slice_size=5):
+def generate_prompts(comments, video_title, num_prompts=5, slice_size=15):
     """
     generate a list of random prompts from a list of comments.
 
@@ -116,7 +118,7 @@ def index():
             video_title = get_video_title(api_key, video_id)
             comments = get_comments(api_key, video_id)
             if comments:
-                prompts = generate_prompts(video_title, comments)
+                prompts = generate_prompts(comments, video_title)
                 responses = generate_responses(prompts)
             else:
                 prompts = ["no comments found or unable to retrieve comments."]

@@ -27,21 +27,33 @@
         margin-left: 2rem;
       }
     .prompt-box{
-        border: 1px solid red;
-
-    }
+        background-color: hsla(124, 90%, 40%, 0.41);
+        border: 1px solid white;
+        border_radius: 5rem;
+  
+    }œ
     .response-box{
-
+        border: 1px solid white;
+        border_radius: 5rem;
+        background-color: hsla(124, 90%, 40%, 0.41);
     }
     #loading {
+        color: black;
+        text-stroke: white;
+        font-size: 2rem;
         display: none;
-        font-weight: bold;
+        background: linear-gradient(-25deg, hsla(0, 100%, 50%, 0.1), hsla(0, 100%, 50%, 0.4));
+        border-radius: 5rem;
+        margin: 5rem;
+        text-shadow: -1px 1px 0 hsla(174, 90%, 40%, 0.51);
+
+
       }
     </style>
 
     <script>
       function showLoading() {
-        document.getelementById("loading").style.display = "block";
+        document.getElementById("loading").style.display = "block";
       }
     </script>
   </head>
@@ -68,7 +80,20 @@
     </div>
     {% endif %}
 
-    <div id="loading">generating... #e hold</div>
+
+</br>
+</br>
+</br>
+</br>
+
+        <div id="loading">
+            </br>
+            </br>
+                generating prompts... please hold
+            </br>
+            </br>
+            </br>
+        </div>
 
     {% if responses %}
     <h2>responses:</h2>
