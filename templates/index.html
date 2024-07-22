@@ -27,15 +27,15 @@
         margin-left: 2rem;
       }
     .prompt-box{
-        background-color: hsla(124, 90%, 40%, 0.67);
-        border: 1px solid white;
+        background-color: hsla(124, 90%, 40%, 0.5);
+        border: 1px solid black;
         border_radius: 5rem;
   
     }œ
     .response-box{
-        border: 1px solid white;
+        border: 1px solid black;
         border_radius: 5rem;
-        background-color: hsla(124, 90%, 40%, 0.77);
+        background-color: hsla(124, 90%, 40%, 0.5);
     }
     #loading {
         color: black;
@@ -61,6 +61,8 @@
   <body>
     <div class="container">
     <h1>YouTube Prompt Generator</h1>
+    <h2>making an LLM talk about the comments</h2>
+    <h3>a needless piece of AI gimmickry, playing with flask</h3>
     <form method="POST" onSubmit="showLoading()">
       <label for="video_url">YouTube Video URL:</label>
       <input type="text" id="video_url" name="video_url" required />
