@@ -44,7 +44,6 @@ def get_comments(api_key, video_id, max_results=2000):
     api_key (str): The API key for authenticating with the YouTube Data API.
     video_id (str): The ID of the YouTube video for which to retrieve comments.
     max_results (int): The maximum number of comments to retrieve.
-
     returns:
     list: list of comments.
     """
@@ -66,7 +65,7 @@ def get_comments(api_key, video_id, max_results=2000):
         error_message = e.content.decode('utf-8')
         return {"error": error_message}
 
-def generate_prompts(comments, video_title, num_prompts=3, slice_size=50):
+def generate_prompts(comments, num_prompts=3, slice_size=50):
     """
     generate a list of random prompts from a list of comments.
 
@@ -74,8 +73,6 @@ def generate_prompts(comments, video_title, num_prompts=3, slice_size=50):
     comments (list): list of comments.
     num_prompts (int): no. of prompts to generate.
     slice_size (int): no. of words per prompt slice.
-    video_title: as it sounds
-
     returns:
     list: List of generated prompts.
     """
@@ -87,7 +84,7 @@ def generate_prompts(comments, video_title, num_prompts=3, slice_size=50):
     
     slices = [' '.join(words[i:i+slice_size]) for i in range(len(words) - slice_size + 1)]
     
-    prompts = [f'{video_title}: ',  ]
+    prompts = []
 
     for _ in range(num_prompts):
         slice_ = random.choice(slices)
@@ -98,9 +95,9 @@ def generate_prompts(comments, video_title, num_prompts=3, slice_size=50):
     return prompts
 
 
-
-def generate_responses(prompts, model_name='llama3.1:8b'):
+def generate_responses(prompts, video_title, model_name='llama3.1:8b'):
     responses = []
+    title_context = f"Video Title: {video_title}"
 
     for p in prompts:
         response = ollama.generate(model=model_name, prompt=p, context=title_context)
@@ -121,8 +118,8 @@ def index():
             video_title = get_video_title(api_key, video_id)
             comments = get_comments(api_key, video_id)
             if comments:
-                prompts = generate_prompts(comments, video_title)
-                responses = generate_responses(prompts)
+                prompts = generate_prompts(comments)
+                responses = generate_responses(prompts, title_context)
             else:
                 prompts = ["no comments found or unable to retrieve comments."]
         else:
