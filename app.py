@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 
 load_dotenv()
+title_context = ''
 
 def get_video_id(url):
     """
@@ -35,7 +36,7 @@ def get_video_title(api_key, video_id):
         return video_title
     return None
 
-def get_comments(api_key, video_id, max_results=200):
+def get_comments(api_key, video_id, max_results=2000):
     """
     fetches youtube comments via API because why not
 
@@ -65,7 +66,7 @@ def get_comments(api_key, video_id, max_results=200):
         error_message = e.content.decode('utf-8')
         return {"error": error_message}
 
-def generate_prompts(comments, video_title, num_prompts=5, slice_size=15):
+def generate_prompts(comments, video_title, num_prompts=3, slice_size=50):
     """
     generate a list of random prompts from a list of comments.
 
@@ -86,21 +87,23 @@ def generate_prompts(comments, video_title, num_prompts=5, slice_size=15):
     
     slices = [' '.join(words[i:i+slice_size]) for i in range(len(words) - slice_size + 1)]
     
-    prompts = []
+    prompts = [f'{video_title}: ',  ]
 
     for _ in range(num_prompts):
         slice_ = random.choice(slices)
         if slice_[-1] not in '.!?':
             slice_ += '.'
-        prompts.append(f"{video_title} : {slice_}")
-    
+        prompts.append(slice_)
+
     return prompts
 
 
-def generate_responses(prompts, model_name='llama3'):
+
+def generate_responses(prompts, model_name='llama3.1:8b'):
     responses = []
+
     for p in prompts:
-        response = ollama.generate(model=model_name, prompt=p)
+        response = ollama.generate(model=model_name, prompt=p, context=title_context)
         responses.append(response['response'])
     return responses
 

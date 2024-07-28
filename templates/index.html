@@ -11,9 +11,15 @@
         background-repeat: no-repeat;
         background-clip: text;
         background-color: rgb(109, 180, 165);
-        color: aqua;    
+        color: black;
+        text-shadow: -1px 1px 0 hsla(174, 90%, 40%, 0.61);
+
+
         text-align: center;
         font-weight: bold;
+    }
+    ul{
+        list-style-type: none;
     }
     .container{
         margin: 0rem 5rem;
@@ -33,29 +39,37 @@
       }
     .response {
         margin-left: 2rem;
+        padding: 1rem;
       }
+
     .prompt-box{
-        background-color: hsla(120, 90%, 40%, 0.5);
+        background-color: hsla(110, 90%, 40%, 0.5);
         border: 1px solid black;
-        border-radius: 5rem;
-  
+        border-radius: 3rem;
+        padding: 1rem;  
     }
     .response-box{
         border: 1px solid black;
         border-radius: 3rem;
-        background-color: hsla(124, 90%, 40%, 0.5);
+        background-color: hsla(110, 90%, 40%, 0.5);
+        padding: 1rem 1rem 2rem 1rem;
     }
     #loading {
         color: black;
         text-stroke: white;
         font-size: 2rem;
         display: none;
-        background: linear-gradient(-25deg, hsla(0, 100%, 50%, 0.1), hsla(0, 100%, 50%, 0.4));
+        background: linear-gradient(-45deg, hsla(0, 100%, 60%, 0.1), hsla(0, 100%, 30%, 0.7));
         border-radius: 3rem;
         margin: 5rem;
-        text-shadow: -1px 1px 0 hsla(174, 90%, 40%, 0.51);
-
-
+        text-shadow: -1px 1px 0 hsla(174, 90%, 40%, 0.61);
+      }
+ 
+      .vid_title{
+        margin: 0rem 5rem;
+        padding: .5rem;
+        border-radius: 3rem;
+        background-color: #FBFBFD50;
       }
     </style>
 
@@ -77,20 +91,6 @@
       <button type="submit">Generate Prompts</button>
     </form>
 
-    {% if video_title %}
-    <h2>{{video_title}}</h2>
-    {% endif %} {% if prompts %}
-    <h2>generated prompts:</h2>
-    <div class='prompt-box'>
-    <ul>
-      {% for prompt in prompts %}
-      <li>{{ prompt }}</li>
-      {% endfor %}
-    </ul>
-    </div>
-    {% endif %}
-
-
 </br>
 </br>
 </br>
@@ -105,12 +105,28 @@
             </br>
         </div>
 
+    {% if video_title %}
+    <h2 class="vid_title" >{{video_title}}</h2>
+    {% endif %} {% if prompts %}
+    <h2>generated prompts:</h2>
+    <div class='prompt-box'>
+    <ul>
+      {% for prompt in prompts %}
+      <li>{{ prompt }}</li>
+      {% endfor %}
+    </ul>
+    </div>
+    {% endif %}
+
+
+
+
     {% if responses %}
     <h2>responses:</h2>
     <div class='response-box'>
     <ul>
       {% for response in responses %}
-      <li>{{ response }}</li>
+      <li><br>{{ response }}<br></li>
       {% endfor %}
     </ul>
     </div>
